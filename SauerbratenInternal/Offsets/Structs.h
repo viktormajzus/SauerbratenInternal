@@ -11,8 +11,8 @@ public:
 	Vector3 velocity; //0x000C
 	char pad_0018[24]; //0x0018
 	Vector3 position2; //0x0030
-	Vector2 viewAngle; //0x003C
-	char pad_0044[51]; //0x0044
+	Vector3 viewAngle; //0x003C
+	char pad_0044[47]; //0x0044
 	int8_t entityState; //0x0077
 	char pad_0078[256]; //0x0078
 	int32_t health; //0x0178

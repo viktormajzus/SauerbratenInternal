@@ -1,11 +1,6 @@
 #include "../pch.h"
 #include "Math.h"
 
-float math::Magnitude(const Vector2& vector)
-{
-  float sum{ std::powf(vector.yaw, 2) + std::powf(vector.pitch, 2) };
-  return sqrt(sum);
-}
 float math::Magnitude(const Vector3& vector)
 {
   float sum{ std::powf(vector.x, 2) + std::powf(vector.y, 2) + std::powf(vector.z, 2) };
@@ -22,13 +17,13 @@ float math::DotProduct(const Vector3& operand1, const Vector3& operand2)
   return operand1.x * operand2.x + operand1.y * operand2.y + operand1.z * operand2.z;
 }
 
-bool math::WorldToScreen(const Vector3& position, Vector3& screen, std::array<float, 16> matrix, std::pair<int, int> window)
+bool math::WorldToScreen(const Vector3& position, Vector3& screen, const Matrix& matrix, std::pair<int, int> window)
 {
   Vector4 clip{};
-  clip.x = position.x * matrix[0] + position.y * matrix[4] + position.z * matrix[8] + matrix[12];
-  clip.y = position.x * matrix[1] + position.y * matrix[5] + position.z * matrix[9] + matrix[13];
-  clip.z = position.x * matrix[2] + position.y * matrix[6] + position.z * matrix[10] + matrix[14];
-  clip.w = position.x * matrix[3] + position.y * matrix[7] + position.z * matrix[11] + matrix[15];
+  clip.x = position.x * matrix.column1.x + position.y * matrix.column2.x + position.z * matrix.column3.x + matrix.column4.x;
+  clip.y = position.x * matrix.column1.y + position.y * matrix.column2.y + position.z * matrix.column3.y + matrix.column4.y;
+  clip.z = position.x * matrix.column1.z + position.y * matrix.column2.z + position.z * matrix.column3.z + matrix.column4.z;
+  clip.w = position.x * matrix.column1.w + position.y * matrix.column2.w + position.z * matrix.column3.w + matrix.column4.w;
 
   if (clip.w < 0.1f)
     return false;

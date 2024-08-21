@@ -7,8 +7,8 @@
 void ESP::DrawLine(Vector3 target, HDC hdc, std::uintptr_t moduleBaseAddress)
 {
   std::pair<int, int> window{};
-  window.first = memory::Read<int>(moduleBaseAddress, offsets::window.first) / 2;
-  window.second = memory::Read<int>(moduleBaseAddress, offsets::window.second);
+  window.first = *reinterpret_cast<int*>(moduleBaseAddress + offsets::window.first) / 2;
+  window.second = *reinterpret_cast<int*>(moduleBaseAddress + offsets::window.second);
 
   HPEN pen{ CreatePen(PS_SOLID, 2, RGB(200, 50, 50)) };
   HPEN oldPen{ reinterpret_cast<HPEN>(SelectObject(hdc, pen)) };
@@ -26,12 +26,14 @@ void feature::ESP(std::uintptr_t moduleBaseAddress, Entity* localPlayer, HWND hw
   HDC hdc{ GetDC(hwnd) };
 
   std::pair<int, int> window{};
-  window.first = memory::Read<int>(moduleBaseAddress, offsets::window.first);
-  window.second = memory::Read<int>(moduleBaseAddress, offsets::window.second);
+  window.first = *reinterpret_cast<int*>(moduleBaseAddress + offsets::window.first);
+  window.second = *reinterpret_cast<int*>(moduleBaseAddress + offsets::window.second);
 
-  for (auto i{ 0 }; i < memory::Read<int>(moduleBaseAddress, offsets::playerCount); i++)
+  for (auto i{ 0 }; i < *reinterpret_cast<int*>(moduleBaseAddress + offsets::playerCount); ++i)
   {
-    Entity* currentEntity{ memory::Read<Entity*>(memory::Read<std::uintptr_t>(moduleBaseAddress, offsets::entityList), i * 0x8) };
+    std::uintptr_t* entityList{ reinterpret_cast<std::uintptr_t*>(moduleBaseAddress + offsets::entityList) };
+    Entity* currentEntity{ memory::GetEntity(*entityList, i * 0x8) };
+
     if (currentEntity == localPlayer)
       continue;
 
@@ -41,7 +43,7 @@ void feature::ESP(std::uintptr_t moduleBaseAddress, Entity* localPlayer, HWND hw
     if (currentEntity->entityState == 1)
       continue;
 
-    std::array<float, 16> matrix{ memory::Read<float, 16>(moduleBaseAddress, offsets::viewMatrix) };
+    Matrix matrix{ *reinterpret_cast<Matrix*>(moduleBaseAddress + offsets::viewMatrix) };
 
     if (math::WorldToScreen(currentEntity->position2, screen, matrix, window))
       ESP::DrawLine(screen, hdc, moduleBaseAddress);

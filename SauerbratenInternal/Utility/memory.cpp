@@ -52,6 +52,13 @@ void memory::Cleanup(FILE*& f, HMODULE hModule, BOOL isConsoleAllocated, Error e
   FreeLibraryAndExitThread(hModule, EXIT_FAILURE);
 }
 
+Entity* memory::GetEntity(std::uintptr_t moduleBaseAddress, std::uintptr_t offset)
+{
+  std::uintptr_t* entityPtr{
+    reinterpret_cast<std::uintptr_t*>(moduleBaseAddress + offset) };
+  return reinterpret_cast<Entity*>(*entityPtr);
+}
+
 std::expected<void, Error> memory::Patch(std::uintptr_t dst, const std::vector<std::uint8_t>& bytes)
 {
   DWORD oldProtect{};
@@ -95,12 +102,7 @@ std::expected<void, Error> memory::Patch(std::uintptr_t dst, std::uint8_t byte, 
 
 // Deprecated
 /*
-Entity* memory::GetEntity(std::uintptr_t moduleBaseAddress, std::uintptr_t offset)
-{
-  std::uintptr_t* entityPtr{
-    reinterpret_cast<std::uintptr_t*>(moduleBaseAddress + offset) };
-  return reinterpret_cast<Entity*>(*entityPtr);
-}
+
 
 int memory::GetPlayerCount(std::uintptr_t moduleBaseAddress, std::uintptr_t offset)
 {

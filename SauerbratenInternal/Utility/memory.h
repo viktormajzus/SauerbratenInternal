@@ -11,12 +11,14 @@ std::expected<std::uintptr_t, Error> GetModuleBaseAddress(std::wstring_view modu
 
 // Deprecated
 /*
-Entity* GetEntity(std::uintptr_t moduleBaseAddress, std::uintptr_t offset);
+
 
 int GetPlayerCount(std::uintptr_t moduleBaseAddress, std::uintptr_t offset);
 
 std::uintptr_t GetEntityList(std::uintptr_t moduleBaseAddress, std::uintptr_t offset);
 */
+
+Entity* GetEntity(std::uintptr_t moduleBaseAddress, std::uintptr_t offset);
 
 template<typename T>
 T Read(std::uintptr_t moduleBaseAddress, std::uintptr_t offset)

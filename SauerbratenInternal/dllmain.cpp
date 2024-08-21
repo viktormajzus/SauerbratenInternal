@@ -28,7 +28,7 @@ void HackThread(HMODULE hModule)
   }
 
   Entity* localPlayer{
-    memory::Read<Entity*>(*moduleBaseAddress, offsets::localPlayer)
+    memory::Read<Entity*>(moduleBaseAddress.value(), offsets::localPlayer)
   };
 
   bool bAmmo{ false };

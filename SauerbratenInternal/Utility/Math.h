@@ -11,18 +11,20 @@ static struct Vector3
 	float x, y, z;
 }vector3, Vec3, vec3;
 
-static struct Vector2
+static struct Matrix
 {
-	float yaw, pitch;
-}vector2, Vec2, vec2;
+	Vector4 column1;
+	Vector4 column2;;
+	Vector4 column3;;
+	Vector4 column4;;
+};
 
 namespace math
 {
-float Magnitude(const Vector2& vector);
 float Magnitude(const Vector3& vector);
 float ToDegrees(float radValue);
 float DotProduct(const Vector3& vector1, const Vector3& operand2);
-bool WorldToScreen(const Vector3& position, Vector3& screen, std::array<float, 16> matrix, std::pair<int, int> window);
+bool WorldToScreen(const Vector3& position, Vector3& screen, const Matrix& matrix, std::pair<int, int> window);
 }
 
 inline Vector3 operator-(const Vector3& lhs, const Vector3& rhs)
